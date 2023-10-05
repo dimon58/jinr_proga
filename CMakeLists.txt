@@ -3,4 +3,4 @@ project(jinr_proga C)
 
 set(CMAKE_C_STANDARD 23)
 
-add_executable(jinr_proga task2.c)
+add_executable(jinr_proga task3.c)

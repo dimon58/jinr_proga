@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include<string.h>
+#include <string.h>
 
 #define sqr(x) (x)*(x)
 #define MAXCHAR 1000
@@ -96,9 +96,8 @@ int count_if_contains(struct triangle *arr, int size, const int x0, const int y0
 }
 
 int main() {
-//    int *size = (int *) malloc(sizeof(int));
     int size;
-    struct triangle *arr = get_triangles_from_file("../triangles.txt", &size);
+    struct triangle *arr = get_triangles_from_file("tasks/triangles.txt", &size);
 
     sort_by_area(arr, size);
 

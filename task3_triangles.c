@@ -96,7 +96,7 @@ int main() {
     printf("Start\n");
     int size;
     printf("Reading file\n");
-    struct triangle *arr = get_triangles_from_file("../tasks/triangles.txt", &size);
+    struct triangle *arr = get_triangles_from_file("tasks/triangles.txt", &size);
 
     printf("Sorting triangles by area\n");
     sort_by_area(arr, size);

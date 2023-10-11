@@ -1,20 +1,22 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include <malloc.h>
 #include <math.h>
 
 
 double uniform_dist() {
-    // +1 и +2 нужны для невозможности сгенерировать 0 или 1, чтобы не получались nan в normal_dist
-    return (double) (rand() + 1) / ((double) RAND_MAX + 2); // NOLINT(cert-msc50-cpp)
+    return (double) rand() / (double) RAND_MAX; // NOLINT(cert-msc50-cpp)
 }
 
 double normal_dist() {
     double u = uniform_dist();
+    // fix nan after log(u)
+    if (u == 0) u += 1e-12;
+
     double v = uniform_dist();
 
-    return sqrt(-2 * M_PI * log(u)) * cos(2 * M_PI * v);
+
+    return sqrt(-2 * log(u)) * cos(2 * M_PI * v);
 }
 
 
@@ -33,7 +35,7 @@ double calc_mu_k(const double *arr, int size, int k) {
     double mean = calc_mean(arr, size);
 
     double res = 0;
-    for (int i = 0; i < size; ++i) res += pow(mean - arr[i], k);
+    for (int i = 0; i < size; ++i) res += pow(arr[i] - mean, k);
 
     return res / size;
 
@@ -101,15 +103,15 @@ int main(int argc, char *argv[]) {
     printf("\n");
 
     printf("Creating array size %d for normal dist\n", size);
-    fill_array(normal_dist,arr, size);
+    fill_array(normal_dist, arr, size);
     print_arr_c(arr, size);
     free(arr);
 
     const char *path = "tasks/Landau.txt";
     printf("\n\nReading %s\n", path);
-    int *size_file = (int *) malloc(sizeof(int));
-    double *arr_file = get_array_from_txt(path, size_file);
-    print_arr_c(arr_file, *size_file);
+    int size_file = 0;
+    double *arr_file = get_array_from_txt(path, &size_file);
+    print_arr_c(arr_file, size_file);
     free(arr_file);
 
     return 0;

@@ -3,4 +3,4 @@ project(jinr_proga CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(jinr_proga task7_rational_numbers.cpp)
+add_executable(jinr_proga task8_polynomial.cpp)

@@ -69,7 +69,7 @@ class Card:
             "4": Value.C4,
             "3": Value.C3,
             "2": Value.C2,
-        }[encoded[:-1]]
+        }[encoded[0]]
 
         self.suit = {
             "S": Suite.Spades,
@@ -99,8 +99,8 @@ class Hand:
         return f"Hand<{cards}>"
 
     def __gt__(self, other: "Hand"):
-        if self.combination > other.combination:
-            return True
+        if self.combination != other.combination:
+            return self.combination > other.combination
 
         if self.combination == CardCombination.FullHouse:
             return (
@@ -254,11 +254,11 @@ def test():
 
 def main():
     test()
-
     victories = 0
     with open("tasks/poker.txt", "r") as file:
         for i in file.readlines():
             hand1, hand2 = parse_line(i)
+            print(hand1 > hand2, hand1, hand2)
             if hand1 > hand2:
                 victories += 1
     print(f"First player won {victories} times")

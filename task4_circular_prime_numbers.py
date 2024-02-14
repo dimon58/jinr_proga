@@ -35,7 +35,14 @@ def get_circular_permutations(digits: list[int]):
 
 
 def is_circular_prime(n: int) -> bool:
-    for permutation in get_circular_permutations(get_digit_list(n)):
+    digits = get_digit_list(n)
+
+    if len(digits) > 1:
+        for x in digits:
+            if x in {0, 2, 4, 5, 6, 8}:
+                return False
+
+    for permutation in get_circular_permutations(digits):
         if not is_prime(list_of_digits_to_number(permutation)):
             return False
 

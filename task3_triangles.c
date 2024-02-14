@@ -36,7 +36,11 @@ bool is_point_inside_triangle(const struct triangle *obj, double x0, double y0) 
     double v2 = (obj->x2 - x0) * (obj->y3 - obj->y2) - (obj->x3 - obj->x2) * (obj->y2 - y0);
     double v3 = (obj->x3 - x0) * (obj->y1 - obj->y3) - (obj->x1 - obj->x3) * (obj->y3 - y0);
 
-    if (signbit(v1) == signbit(v2) && signbit(v2) == signbit(v3)) return true;
+    const bool sign1 = v1 > 0;
+    const bool sign2 = v2 > 0;
+    const bool sign3 = v3 > 0;
+
+    if (sign1 == sign2 && sign2 == sign3) return true;
 
     return false;
 }
@@ -73,7 +77,13 @@ struct triangle *get_triangles_from_file(const char *path, int *size) {
 }
 
 int area_cmp(const void *tri1, const void *tri2) {
-    return (int) calc_triangle_area((struct triangle *) tri1) - (int) calc_triangle_area((struct triangle *) tri2);
+    const double area1 = calc_triangle_area((struct triangle *) tri1);
+    const double area2 = calc_triangle_area((struct triangle *) tri2);
+
+    if (area1<area2) return -1;
+    if (area1>area2) return 1;
+
+    return 0;
 }
 
 void sort_by_area(struct triangle *arr, int size) {
@@ -96,7 +106,16 @@ int main() {
     printf("Start\n");
     int size;
     printf("Reading file\n");
-    struct triangle *arr = get_triangles_from_file("tasks/triangles.txt", &size);
+    struct triangle *arr = get_triangles_from_file("../tasks/triangles.txt", &size);
+
+
+    printf("Tri1 ");
+    print_triangle(&arr[0]);
+    printf("%d\n", is_point_inside_triangle(&arr[0], 0, 0));
+
+    printf("Tri2 ");
+    print_triangle(&arr[1]);
+    printf("%d\n", is_point_inside_triangle(&arr[1], 0, 0));
 
     printf("Sorting triangles by area\n");
     sort_by_area(arr, size);
@@ -107,6 +126,8 @@ int main() {
     print_triangle(&arr[size - 1]);
 
     printf("%d/%d triangles contains (0, 0)", count_if_contains(arr, size, 0, 0), size);
+
+    struct triangle t = {0.23,0.65,1.52,1.25,8.80,4.7};
 
     return 0;
 }

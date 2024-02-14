@@ -3,4 +3,4 @@ project(jinr_proga CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(jinr_proga task8_polynomial.cpp)
+add_executable(jinr_proga task9_phone_book.cpp)

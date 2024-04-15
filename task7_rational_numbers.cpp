@@ -35,7 +35,9 @@ T BinaryPower(T b, uint64_t e) {
 class Rational {
 public:
 
-    Rational(NumberType m, NumberType n) : _numerator(m), _denominator(n) {}
+    Rational(NumberType m, NumberType n) : _numerator(m), _denominator(n) {
+//        reduce();
+    }
 
     // Фикс бед компиляции
     Rational(int m, int n) : _numerator(m), _denominator(n) {}
@@ -126,7 +128,15 @@ public:
         return *this;
     }
 
+
     Rational operator/=(const Rational &other) {
+
+        if (this == &other) {
+            _numerator = 1;
+            _denominator = 1;
+            return *this;
+        }
+
         _numerator = _numerator * other._denominator;
         _denominator = _denominator * other._numerator;
         return *this;
@@ -349,6 +359,18 @@ void test_rational_number() {
     assert(fabs(static_cast<double >(Rational(76, 34)) - 76.0 / 34) < 1e-10);
     assert(fabs(static_cast<double >(Rational(-2734378, 92374)) - -2734378.0 / 92374) < 1e-10);
 
+    r = {1, 2};
+    r /= r;
+
+
+    std::cout << Rational(0, 1) << std::endl;
+    Rational res;
+    for (int i = 2; i < 20; ++i) {
+        res += Rational(1, BinaryPower(2, i));
+        res.reduce();
+        std::cout << i << " " << res << std::endl;
+    }
+    std::cout << res;
 }
 
 template<typename T>

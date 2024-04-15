@@ -19,7 +19,9 @@ public:
 
     Polynomial() : _koefs({0.0}) {};
 
-    explicit Polynomial(const std::vector<double> &vec) : _koefs(vec) {}
+    explicit Polynomial(const std::vector<double> &vec) : _koefs(vec) {
+        if (vec.empty()) { _koefs = {0.0}; };
+    }
 
     friend std::ostream &operator<<(std::ostream &out, const Polynomial &poly) {
         for (size_t i = poly._koefs.size() - 1; i > 0; --i) {
@@ -123,8 +125,9 @@ public:
         return poly;
     }
 
-    Polynomial operator*=(const Polynomial &other) const {
-        return *this * other;
+    Polynomial operator*=(const Polynomial &other) {
+        *this = *this * other;
+        return *this;
     }
 
     Polynomial multiply_monom(const unsigned int degree) const {
@@ -175,12 +178,12 @@ public:
         _reduce_vector(_koefs);
     }
 
-    [[nodiscard]] size_t getDegree() const {
+    size_t getDegree() const {
         return _koefs.size() - 1;
     }
 
     /// Возвращает результат деления столбиком на divisor в виде (результат, остаток)
-    [[nodiscard]] std::pair<Polynomial, Polynomial> divide(const Polynomial &divisor) const {
+    std::pair<Polynomial, Polynomial> divide(const Polynomial &divisor) const {
         size_t self_degree = getDegree(), divider_degree = divisor.getDegree();
 
         if (divider_degree == 0) {
@@ -286,8 +289,12 @@ void test_poly() {
     double t = 0.05;
     std::cout << "P(0.05) = " << p(t) << " | log(1+x) = " << log(t + 1) << std::endl;
     std::cout << "Q(0.05) = " << q(t) << " | sin(x)/x = " << sin(t) / t << std::endl;
-    std::cout << "P(0.05) * Q(0.05) = " << p(t) * q(t)
+
+    std::cout << "P(0.05) * Q(0.05) = " << (p * q)(t)
               << " | log(1+x)*sin(x)/x = " << log(t + 1) * sin(t) / t << std::endl;
+    std::cout << "P(0.05) + Q(0.05) = " << (p + q)(t)
+              << " | log(1+x)+sin(x)/x = " << log(t + 1) + sin(t) / t << std::endl;
+    std::cout << "P'(0.05) = " << p.derivative()(t) << " | 1/(1+x) = " << 1 / (t + 1) << std::endl;
 
 }
 
